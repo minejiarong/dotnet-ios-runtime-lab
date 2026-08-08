@@ -1,0 +1,50 @@
+name: Gated device build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gated-private-device-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build private source
+    runs-on: macos-26
+    timeout-minutes: 120
+    environment: private-build
+
+    steps:
+      - name: Create short-lived repository token
+        id: app-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
+        with:
+          app-id: ${{ secrets.BUILD_APP_ID }}
+          private-key: ${{ secrets.BUILD_APP_PRIVATE_KEY }}
+          owner: ${{ secrets.PRIVATE_OWNER }}
+          repositories: ${{ secrets.PRIVATE_REPOSITORY }}
+
+      - name: Check out approved private source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ${{ secrets.PRIVATE_OWNER }}/${{ secrets.PRIVATE_REPOSITORY }}
+          ref: ${{ secrets.PRIVATE_REF }}
+          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
+          submodules: false
+          fetch-depth: 1
+          path: private-source
+
+      - name: Run private build entrypoint
+        shell: bash
+        working-directory: private-source
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          SOURCE_REPOSITORY: ${{ secrets.PRIVATE_OWNER }}/${{ secrets.PRIVATE_REPOSITORY }}
+          INPUT_RELEASE: ${{ secrets.INPUT_RELEASE }}
+          INPUT_ASSET: ${{ secrets.INPUT_ASSET }}
+          OUTPUT_RELEASE: ${{ secrets.OUTPUT_RELEASE }}
+        run: bash ci/hosted-device-build.sh
