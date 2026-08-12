@@ -2,6 +2,15 @@ name: Gated device build
 
 on:
   workflow_dispatch:
+    inputs:
+      build_target:
+        description: Approved private build entry point
+        required: true
+        default: native-host
+        type: choice
+        options:
+          - native-host
+          - ios-assemblies
 
 permissions:
   contents: read
@@ -47,7 +56,7 @@ jobs:
           fetch-depth: 1
           path: private-source
 
-      - name: Run approved private native host build
+      - name: Run approved private build
         shell: bash
         working-directory: private-source
         env:
@@ -56,4 +65,16 @@ jobs:
           INPUT_RELEASE: ${{ secrets.INPUT_RELEASE }}
           INPUT_ASSET: ${{ secrets.INPUT_ASSET }}
           OUTPUT_RELEASE: ${{ secrets.OUTPUT_RELEASE }}
-        run: bash ci/hosted-native-mono-host-build.sh
+        run: |
+          case "${{ inputs.build_target }}" in
+            native-host)
+              bash ci/hosted-native-mono-host-build.sh
+              ;;
+            ios-assemblies)
+              bash ci/hosted-ios-assembly-preparation.sh
+              ;;
+            *)
+              echo "Unsupported private build target." >&2
+              exit 2
+              ;;
+          esac
