@@ -11,6 +11,7 @@ on:
         options:
           - native-host
           - ios-assemblies
+          - fna24-ios-native
 
 permissions:
   contents: read
@@ -72,6 +73,9 @@ jobs:
               ;;
             ios-assemblies)
               bash ci/hosted-ios-assembly-preparation.sh
+              ;;
+            fna24-ios-native)
+              bash ci/hosted-fna24-ios-native-build.sh
               ;;
             *)
               echo "Unsupported private build target." >&2
