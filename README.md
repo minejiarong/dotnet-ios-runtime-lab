@@ -42,6 +42,12 @@ Create an environment named `private-build`, add a required reviewer, and store:
 The private repository must provide `ci/hosted-device-build.sh`. It is responsible
 for dependency preparation, compilation, packaging, and private result upload.
 
+The separate `Lightweight JIT probe build` workflow calls
+`ci/hosted-jit-probe-build.sh`. It builds only a native UIKit executable and the
+executable-memory service: no protected input, managed runtime, or game
+dependencies are downloaded. Its unsigned IPA and log are uploaded directly to
+the configured private release.
+
 ## License
 
 MIT
