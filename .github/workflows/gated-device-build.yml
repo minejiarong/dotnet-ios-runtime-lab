@@ -27,12 +27,6 @@ jobs:
             ~/.dotnet/metadata/workloads
           key: dotnet-ios-workload-${{ runner.os }}-${{ runner.arch }}-10.0.302.1-v1
 
-      - name: Restore public custom Mono runtime cache
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: ~/Library/Caches/dotnet-ios-runtime-lab/custom-mono-v10.0.10
-          key: custom-mono-ios-arm64-v10.0.10-mirror-v1-${{ runner.os }}-${{ runner.arch }}
-
       - name: Create short-lived repository token
         id: app-token
         uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
