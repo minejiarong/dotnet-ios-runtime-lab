@@ -47,7 +47,7 @@ jobs:
           fetch-depth: 1
           path: private-source
 
-      - name: Run private build entrypoint
+      - name: Run approved private native host build
         shell: bash
         working-directory: private-source
         env:
@@ -56,4 +56,4 @@ jobs:
           INPUT_RELEASE: ${{ secrets.INPUT_RELEASE }}
           INPUT_ASSET: ${{ secrets.INPUT_ASSET }}
           OUTPUT_RELEASE: ${{ secrets.OUTPUT_RELEASE }}
-        run: bash ci/hosted-device-build.sh
+        run: bash ci/hosted-native-mono-host-build.sh
