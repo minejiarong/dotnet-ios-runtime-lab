@@ -11,6 +11,7 @@ on:
         options:
           - native-host
           - runtime-detour
+          - runtime-detour-a2
           - ios-assemblies
           - fna24-ios-native
           - vanilla-jit
@@ -60,11 +61,13 @@ jobs:
           path: private-source
 
       - name: Restore public runtime detour dependency cache
-        if: inputs.build_target == 'runtime-detour'
+        if: inputs.build_target == 'runtime-detour' || inputs.build_target == 'runtime-detour-a2'
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
-          path: private-source/.cache/monomod-a2
-          key: runtime-detour-dfc30a1-${{ hashFiles('private-source/patches/monomod-dfc30a1506d37fb88a2c2be004f525205f46a24c-ios-a2.patch') }}
+          path: |
+            private-source/.cache/monomod-a2
+            private-source/.cache/monomod-a3
+          key: runtime-detour-${{ inputs.build_target }}-dfc30a1-${{ hashFiles('private-source/patches/monomod-dfc30a1506d37fb88a2c2be004f525205f46a24c-ios-a2.patch') }}
 
       - name: Run approved private build
         shell: bash
@@ -81,6 +84,9 @@ jobs:
               bash ci/hosted-native-mono-host-build.sh
               ;;
             runtime-detour)
+              bash ci/hosted-monomod-a3-build.sh
+              ;;
+            runtime-detour-a2)
               bash ci/hosted-monomod-a2-build.sh
               ;;
             ios-assemblies)
