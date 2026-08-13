@@ -15,6 +15,7 @@ on:
           - ios-assemblies
           - fna24-ios-native
           - vanilla-jit
+          - everest-core
 
 permissions:
   contents: read
@@ -97,6 +98,9 @@ jobs:
               ;;
             vanilla-jit)
               bash ci/hosted-vanilla-jit-build.sh
+              ;;
+            everest-core)
+              bash ci/hosted-everest-core-build.sh
               ;;
             *)
               echo "Unsupported private build target." >&2
