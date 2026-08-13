@@ -13,6 +13,7 @@ on:
           - runtime-detour
           - ios-assemblies
           - fna24-ios-native
+          - vanilla-jit
 
 permissions:
   contents: read
@@ -87,6 +88,9 @@ jobs:
               ;;
             fna24-ios-native)
               bash ci/hosted-fna24-ios-native-build.sh
+              ;;
+            vanilla-jit)
+              bash ci/hosted-vanilla-jit-build.sh
               ;;
             *)
               echo "Unsupported private build target." >&2
