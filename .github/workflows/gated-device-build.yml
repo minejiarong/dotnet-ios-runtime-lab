@@ -18,6 +18,7 @@ on:
           - vanilla-jit
           - everest-core
           - everest-metal
+          - everest-d3
 
 permissions:
   contents: read
@@ -109,6 +110,9 @@ jobs:
               ;;
             everest-metal)
               bash ci/hosted-everest-metal-build.sh
+              ;;
+            everest-d3)
+              bash ci/hosted-everest-d3-build.sh
               ;;
             *)
               echo "Unsupported private build target." >&2
